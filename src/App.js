@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 import Navbar from "./components/Navbar";
 import Work from './components/Work';
 import Home from "./components/Home";
 import About from './components/About';
+import Sila from './components/Sila';
 import Preloader from './components/Preloader';
 import './App.scss';
 
-function App() {
+const AppContent = () => {
+    const location = useLocation();
+    const isSilaPage = location.pathname === '/sila';
+
     const [page, setPage] = useState("home");
     const [theme, setTheme] = useState("Light");
     const [min781, setMin781] = useState(window.matchMedia("(min-width: 781px)").matches)
@@ -20,18 +24,22 @@ function App() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        if (isSilaPage) {
+            setLoading(false);
+            return;
+        }
         setTimeout(() => {
             const preloader = document.getElementById("preloader");
-            preloader.classList.add("out");
+            if (preloader) preloader.classList.add("out");
         }, 1800);
         setTimeout(() => {
             const preloader = document.getElementById("preloader");
-            preloader.classList.add("disabled");
+            if (preloader) preloader.classList.add("disabled");
         }, 2100);
         setTimeout(() => {
             setLoading(false);
         }, 3000);
-    }, []);
+    }, [isSilaPage]);
 
     useEffect(() => {
         window
@@ -53,24 +61,27 @@ function App() {
         }
     }, [theme]);
 
+    return (
+        <div className={'App' + ' ' + theme} id='App'>
+            {loading && !isSilaPage && <Preloader />}
+            {!isSilaPage && <Navbar className='bar' page={page} theme={theme} min781={min781} setPage={setPage} setTheme={setTheme} />}
+            <div className={isSilaPage ? '' : 'page'}>
+                <Routes>
+                    <Route path='/' element={<Home theme={theme} min781={min781} min1281={min1281} homeHintEnabled={homeHintEnabled} setHomeHintEnabled={setHomeHintEnabled} />}></Route>
+                    <Route path='/work' element={<Work theme={theme} min781={min781} min1281={min1281} />}></Route>
+                    <Route path='/about' element={<About theme={theme} min781={min781} aboutHintEnabled={aboutHintEnabled} setAboutHintEnabled={setAboutHintEnabled} />}></Route>
+                    <Route path='/sila' element={<Sila />}></Route>
+                </Routes>
+            </div>
+        </div>
+    );
+}
 
-
+function App() {
     return (
         <Router>
-            <div className={'App' + ' ' + theme} id='App'>
-                {loading && <Preloader />}
-                <Navbar className='bar' page={page} theme={theme} min781={min781} setPage={setPage} setTheme={setTheme} /><div className='page'>
-                    <Routes>
-                        <Route path='/' element={<Home theme={theme} min781={min781} min1281={min1281} homeHintEnabled={homeHintEnabled} setHomeHintEnabled={setHomeHintEnabled} />}></Route>
-                        <Route path='/work' element={<Work theme={theme} min781={min781} min1281={min1281} />}></Route>
-                        <Route path='/about' element={<About theme={theme} min781={min781} aboutHintEnabled={aboutHintEnabled} setAboutHintEnabled={setAboutHintEnabled} />}></Route>
-                    </Routes>
-                </div>
-            </div>
             <HelmetProvider>
-                <Helmet>
-                    <meta name="theme-color" content={theme === "Light" ? "#f6f6f6" : "#191919"} />
-                </Helmet>
+                <AppContent />
             </HelmetProvider>
         </Router>
     );
