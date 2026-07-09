@@ -1,0 +1,12 @@
+# Netlify configuration file
+
+[build]
+  # Command to build the site
+  command = "yarn build"
+  
+  # Directory to publish (relative to the root of the repository)
+  publish = "build"
+
+[build.environment]
+  # Set the Node.js version
+  NODE_VERSION = "18"
