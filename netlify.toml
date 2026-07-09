@@ -8,5 +8,4 @@
   publish = "build"
 
 [build.environment]
-  # Set the Node.js version
-  NODE_VERSION = "18"
+NODE_VERSION = "20.19.0"
