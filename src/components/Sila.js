@@ -5,8 +5,8 @@ const BouncingImage = ({ src, alt }) => {
     const imageRef = useRef(null);
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const velocityRef = useRef({
-        vx: (Math.random() - 0.5) * 0.6, // Speed control
-        vy: (Math.random() - 0.5) * 0.6, // Speed control
+        vx: (Math.random() - 0.5) * 2, // Speed control
+        vy: (Math.random() - 0.5) * 2, // Speed control
     });
     const [isInitialized, setIsInitialized] = useState(false);
 
@@ -92,7 +92,7 @@ const Sila = () => {
   useEffect(() => {
     const setHeight = () => {
       if (containerRef.current) {
-        containerRef.current.style.height = `${window.innerHeight}px`;
+        containerRef.current.style.height = `${window.innerHeight * 2}px`;
       }
     };
     
@@ -106,7 +106,7 @@ const Sila = () => {
     <div className="sila-container" ref={containerRef}>
       <div className="sila-text-box">
         <p>
-          Hey Sila, here's a little something I made for you. I hope you like it :)
+          Hey sila, im michael, welcome to my page. I dont have an active instagram, so i made this really quick. Feel free to take a look around and scroll down. I dont wanna expose my number here on the internet, but you can ask my bestie julian on hinge
         </p>
       </div>
       {images.map((image, index) => (
